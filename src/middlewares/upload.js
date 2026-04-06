@@ -1,17 +1,20 @@
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-const dir = path.join(process.cwd(), process.env.UPLOAD_DIR || "uploads");
-if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, dir),
-  filename: (req, file, cb) =>
-    cb(
-      null,
-      `${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`,
-    ),
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "shopflow",
+    allowed_formats: ["jpeg", "jpg", "png", "gif", "webp"],
+    resource_type: "image",
+  },
 });
 
 const fileFilter = (req, file, cb) => {
