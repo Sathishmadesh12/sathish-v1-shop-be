@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { order } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+router.use(protect);
+router.get('/', order.getAll);
+router.post('/', order.create);
+router.get('/:id', order.getById);
+router.patch('/:id/status', roleGuard('admin'), order.updateStatus);
+module.exports = router;

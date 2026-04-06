@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const { branch } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+router.get('/', branch.getAll);
+router.get('/:id', branch.getById);
+router.post('/', protect, roleGuard('admin'), branch.create);
+router.put('/:id', protect, roleGuard('admin'), branch.update);
+router.delete('/:id', protect, roleGuard('admin'), branch.delete);
+router.patch('/:id/toggle', protect, roleGuard('admin'), branch.toggleStatus);
+module.exports = router;

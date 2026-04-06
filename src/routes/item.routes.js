@@ -1,0 +1,12 @@
+const router = require('express').Router();
+const { item } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+const upload = require('../middlewares/upload');
+router.get('/', item.getAll);
+router.get('/:id', item.getById);
+router.post('/', protect, roleGuard('admin'), upload.single('image'), item.create);
+router.put('/:id', protect, roleGuard('admin'), upload.single('image'), item.update);
+router.delete('/:id', protect, roleGuard('admin'), item.delete);
+router.patch('/:id/toggle', protect, roleGuard('admin'), item.toggleStatus);
+module.exports = router;

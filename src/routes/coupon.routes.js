@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const { coupon } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+router.get('/', protect, coupon.getAll);
+router.get('/:id', protect, coupon.getById);
+router.post('/', protect, roleGuard('admin'), coupon.create);
+router.put('/:id', protect, roleGuard('admin'), coupon.update);
+router.delete('/:id', protect, roleGuard('admin'), coupon.delete);
+router.patch('/:id/toggle', protect, roleGuard('admin'), coupon.toggleStatus);
+module.exports = router;
