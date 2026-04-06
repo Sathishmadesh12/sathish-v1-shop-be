@@ -14,17 +14,19 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(mongoSanitize());
 app.use(compression());
 
-const allowedOrigins = [
-  "http://localhost:3001",
-  "http://localhost:3002",
-  process.env.CLIENT_URL_LOCAL,
-  process.env.CLIENT_ADMIN_URL_LOCAL,
-].filter(Boolean);
-
 app.use(
   cors({
     origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+      const allowedOrigins = [
+        "http://localhost:3001",
+        "http://localhost:3002",
+        process.env.CLIENT_URL_LOCAL,
+        process.env.CLIENT_ADMIN_URL_LOCAL,
+      ].filter(Boolean);
+
+      if (!origin) return cb(null, true);
+      if (origin.endsWith(".vercel.app")) return cb(null, true);
+      if (allowedOrigins.includes(origin)) return cb(null, true);
       cb(new Error("CORS not allowed"));
     },
     credentials: true,
@@ -35,7 +37,6 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
-// Static uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.get("/api/health", (_, res) =>
