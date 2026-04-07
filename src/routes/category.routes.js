@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const { category } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+router.get('/', category.getAll);
+router.get('/:id', category.getById);
+router.post('/', protect, roleGuard('admin'), category.create);
+router.put('/:id', protect, roleGuard('admin'), category.update);
+router.delete('/:id', protect, roleGuard('admin'), category.delete);
+router.patch('/:id/toggle', protect, roleGuard('admin'), category.toggleStatus);
+module.exports = router;

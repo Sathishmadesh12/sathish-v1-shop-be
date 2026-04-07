@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { wallet } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+router.use(protect);
+router.get('/', wallet.getMyWallet);
+router.get('/history', wallet.getHistory);
+router.get('/all', roleGuard('admin'), wallet.getAllWallets);
+router.post('/add', roleGuard('admin'), wallet.addBalance);
+module.exports = router;

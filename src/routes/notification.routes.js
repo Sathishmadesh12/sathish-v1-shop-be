@@ -1,0 +1,12 @@
+const router = require('express').Router();
+const { notification } = require('../controllers/index');
+const { protect } = require('../middlewares/auth');
+const roleGuard = require('../middlewares/roleGuard');
+router.use(protect);
+router.get('/', notification.getAll);
+router.get('/unread-count', notification.getUnread);
+router.put('/mark-all-read', notification.markAllRead);
+router.put('/:id/read', notification.markRead);
+router.get('/admin/all', roleGuard('admin'), notification.getAllAdmin);
+router.post('/broadcast', roleGuard('admin'), notification.broadcast);
+module.exports = router;
