@@ -18,7 +18,7 @@ class OrderService {
     // Verify stock
     for (const ci of cart.items) {
       const inv = await Inventory.findOne({ item: ci.item._id });
-      if (inv && inv.stock < ci.quantity) throw err(`Insufficient stock for ${ci.item.name}`);
+      // if (inv && inv.stock < ci.quantity) throw err(`Insufficient stock for ${ci.item.name}`);
     }
 
     const orderItems = cart.items.map(ci => ({
