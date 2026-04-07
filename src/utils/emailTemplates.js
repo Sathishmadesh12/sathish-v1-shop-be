@@ -7,7 +7,7 @@ const base = (
 <div style="background:linear-gradient(135deg,${color});padding:36px;text-align:center">
 <h1 style="color:#fff;margin:0;font-size:24px">${title}</h1></div>
 <div style="padding:36px;color:#c4c1e0">${content}</div>
-<div style="padding:20px;text-align:center;color:#4e4a6b;font-size:12px;border-top:1px solid #2d2b45">ShopFlow © 2024 · <a href="#" style="color:#818cf8">Unsubscribe</a></div>
+<div style="padding:20px;text-align:center;color:#4e4a6b;font-size:12px;border-top:1px solid #2d2b45">ShopFlow-sathish<a href="#" style="color:#818cf8"></a></div>
 </div></body></html>`;
 
 const welcomeEmail = (name) =>
