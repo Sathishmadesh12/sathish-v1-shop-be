@@ -20,7 +20,7 @@ class InventoryService {
     if (!inv) throw err('Inventory not found', 404);
     if (action === 'add') inv.stock += qty;
     else if (action === 'deduct') {
-      if (inv.stock < qty) throw err('Insufficient stock');
+      // if (inv.stock < qty) throw err('Insufficient stock');
       inv.stock -= qty;
     } else if (action === 'adjust') {
       inv.stock = qty;
