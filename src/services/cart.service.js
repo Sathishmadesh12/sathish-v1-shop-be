@@ -45,7 +45,7 @@ class CartService {
     const item = await Item.findById(itemId);
     if (!item || !item.isActive) throw err('Item not available', 404);
     const inv = await Inventory.findOne({ item: itemId });
-    if (inv && inv.stock < quantity) throw err('Insufficient stock');
+    // if (inv && inv.stock < quantity) throw err('Insufficient stock');
 
     let cart = await Cart.findOne({ customer: userId });
     if (!cart) cart = await Cart.create({ customer: userId, items: [], shop: item.shop });
@@ -68,7 +68,7 @@ class CartService {
       ci.remove();
     } else {
       const inv = await Inventory.findOne({ item: ci.item });
-      if (inv && inv.stock < quantity) throw err('Insufficient stock');
+      // if (inv && inv.stock < quantity) throw err('Insufficient stock');
       ci.quantity = quantity;
     }
     await this._recalc(cart);
