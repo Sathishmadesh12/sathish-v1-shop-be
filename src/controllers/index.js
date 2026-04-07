@@ -26,9 +26,11 @@ const q = (req) => ({ ...req.query, ...req.params });
 exports.shop = {
   create: wrap(async (req, res) => {
     const data = { ...req.body };
-    if (req.file) data.logo = req.file.filename;
+    if (req.files?.logo) data.logo = req.files.logo[0].path;
+    if (req.files?.paymentQr) data.paymentQr = req.files.paymentQr[0].path;
     apiResponse(res, 201, true, "Shop created", await shopService.create(data));
   }),
+
   getAll: wrap(async (req, res) =>
     apiResponse(res, 200, true, "Shops", await shopService.getAll(req.query)),
   ),
@@ -43,7 +45,8 @@ exports.shop = {
   ),
   update: wrap(async (req, res) => {
     const data = { ...req.body };
-    if (req.file) data.logo = req.file.filename;
+    if (req.files?.logo) data.logo = req.files.logo[0].path;
+    if (req.files?.paymentQr) data.paymentQr = req.files.paymentQr[0].path;
     apiResponse(
       res,
       200,
@@ -177,7 +180,7 @@ exports.category = {
 exports.item = {
   create: wrap(async (req, res) => {
     const data = { ...req.body };
-    if (req.file) data.image = req.file.filename;
+    if (req.file) data.image = req.file.path;
     apiResponse(res, 201, true, "Item created", await itemService.create(data));
   }),
   getAll: wrap(async (req, res) =>
@@ -194,7 +197,7 @@ exports.item = {
   ),
   update: wrap(async (req, res) => {
     const data = { ...req.body };
-    if (req.file) data.image = req.file.filename;
+    if (req.file) data.image = req.file.path;
     apiResponse(
       res,
       200,
@@ -597,9 +600,8 @@ exports.media = {
   upload: wrap(async (req, res) => {
     if (!req.file)
       throw Object.assign(new Error("No file uploaded"), { statusCode: 400 });
-    const url = `/uploads/${req.file.filename}`;
     apiResponse(res, 200, true, "Uploaded", {
-      url,
+      url: req.file.path,
       filename: req.file.filename,
     });
   }),
