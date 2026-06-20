@@ -95,14 +95,16 @@ class AnalyticsService {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const weekAgo = new Date(today); weekAgo.setDate(weekAgo.getDate() - 7);
     const monthAgo = new Date(today); monthAgo.setDate(monthAgo.getDate() - 30);
+    const Inventory = require('../models/inventory.model');
 
-    const [todaySales, weeklySales, monthlySales, totalOrders, totalCustomers, pendingOrders] = await Promise.all([
+    const [todaySales, weeklySales, monthlySales, totalOrders, totalCustomers, pendingOrders, lowStockCount] = await Promise.all([
       Order.aggregate([{ $match: { createdAt: { $gte: today }, status: { $ne: 'cancelled' } } }, { $group: { _id: null, total: { $sum: '$total' }, count: { $sum: 1 } } }]),
       Order.aggregate([{ $match: { createdAt: { $gte: weekAgo }, status: { $ne: 'cancelled' } } }, { $group: { _id: null, total: { $sum: '$total' }, count: { $sum: 1 } } }]),
       Order.aggregate([{ $match: { createdAt: { $gte: monthAgo }, status: { $ne: 'cancelled' } } }, { $group: { _id: null, total: { $sum: '$total' }, count: { $sum: 1 } } }]),
       Order.countDocuments(),
       User.countDocuments({ role: 'customer' }),
       Order.countDocuments({ status: 'pending' }),
+      Inventory.countDocuments({ $expr: { $lte: ['$stock', '$lowStockThreshold'] } }),
     ]);
 
     // Sales by day (last 7 days)
@@ -125,7 +127,7 @@ class AnalyticsService {
       today: { sales: todaySales[0]?.total || 0, orders: todaySales[0]?.count || 0 },
       weekly: { sales: weeklySales[0]?.total || 0, orders: weeklySales[0]?.count || 0 },
       monthly: { sales: monthlySales[0]?.total || 0, orders: monthlySales[0]?.count || 0 },
-      totalOrders, totalCustomers, pendingOrders,
+      totalOrders, totalCustomers, pendingOrders, lowStockCount,
       salesByDay, topItems,
     };
   }

@@ -585,12 +585,27 @@ exports.user = {
   }),
   toggleStatus: wrap(async (req, res) => {
     const User = require("../models/user.model");
+    const { sendEmail } = require("../config/email");
+    const {
+      accountBlockedEmail,
+      accountUnblockedEmail,
+    } = require("../utils/emailTemplates");
+
     const user = await User.findById(req.params.id);
     if (!user) {
       return apiResponse(res, 404, false, "User not found");
     }
     user.isActive = !user.isActive;
     await user.save();
+
+    sendEmail({
+      to: user.email,
+      subject: user.isActive ? "Your account has been unblocked" : "Your account has been blocked",
+      html: user.isActive
+        ? accountUnblockedEmail(user.name)
+        : accountBlockedEmail(user.name),
+    }).catch(() => {});
+
     apiResponse(res, 200, true, "Status toggled", user);
   }),
 };

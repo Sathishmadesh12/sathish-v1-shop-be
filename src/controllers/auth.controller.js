@@ -30,10 +30,12 @@ module.exports = {
     await authService.forgotPassword(req.body.email);
     apiResponse(res, 200, true, "Reset link sent if email exists");
   }),
+
   resetPassword: wrap(async (req, res) => {
     await authService.resetPassword(req.body.token, req.body.newPassword);
     apiResponse(res, 200, true, "Password reset");
   }),
+
   changePassword: wrap(async (req, res) => {
     await authService.changePassword(
       req.user._id,

@@ -8,6 +8,7 @@ const shopSchema = new mongoose.Schema({
   phone: String,
   email: String,
   paymentQr: String,
+  upiId: { type: String, trim: true },
   gstin: String,
   taxRate: { type: Number, default: 0 },
   taxName: { type: String, default: 'GST' },

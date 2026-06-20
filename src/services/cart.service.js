@@ -34,7 +34,9 @@ class CartService {
   }
 
   async getCart(userId) {
-    let cart = await Cart.findOne({ customer: userId }).populate({ path: 'items.item', populate: { path: 'category', select: 'name' } });
+    let cart = await Cart.findOne({ customer: userId })
+      .populate({ path: 'items.item', populate: { path: 'category', select: 'name' } })
+      .populate({ path: 'shop', select: 'name paymentQr upiId' });
     if (!cart) cart = await Cart.create({ customer: userId, items: [] });
     const wallet = await Wallet.findOne({ user: userId });
     cart.walletBalance = wallet?.balance || 0;

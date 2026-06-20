@@ -48,9 +48,28 @@ const passwordChangedEmail = (name) =>
    <p>Your password was changed. If this wasn't you, contact support immediately.</p>`,
   );
 
+const accountBlockedEmail = (name) =>
+  base(
+    "Account Blocked 🚫",
+    "#ef4444,#dc2626",
+    `<p>Hi <strong style="color:#f1f0ff">${name}</strong>,</p>
+   <p>Your account has been <strong style="color:#ef4444">temporarily blocked</strong> by the admin. You will not be able to log in or place orders until your account is unblocked.</p>
+   <p style="font-size:12px;color:#4e4a6b">If you think this is a mistake, please contact support.</p>`,
+  );
+
+const accountUnblockedEmail = (name) =>
+  base(
+    "Account Unblocked ✅",
+    "#10b981,#059669",
+    `<p>Hi <strong style="color:#f1f0ff">${name}</strong>,</p>
+   <p>Good news! Your account has been <strong style="color:#10b981">unblocked</strong> by the admin. You can now log in and continue shopping as usual.</p>`,
+  );
+
 module.exports = {
   welcomeEmail,
   forgotPasswordEmail,
   orderConfirmEmail,
   passwordChangedEmail,
+  accountBlockedEmail,
+  accountUnblockedEmail,
 };
